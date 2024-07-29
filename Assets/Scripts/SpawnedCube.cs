@@ -15,24 +15,19 @@ public class SpawnedCube : MonoBehaviour
 
 	private void Start()
 	{
-		GameObject.Find("Cube Spawner").GetComponent<CubeSpawner>().spawnedCubes++;
-		
+		cubeSpawner = GameObject.Find("Cube Spawner").GetComponent<CubeSpawner>();
+
+		cubeSpawner.spawnedCubes++;
+
 		rb = GetComponent<Rigidbody>();
 	}
 
 	private void Update()
 	{
-		cubeSpawner = GameObject.Find("Cube Spawner").GetComponent<CubeSpawner>();
-
 		if (GameObject.Find("Cube Spawner").GetComponent<CubeSpawner>().spawnedCubes > 10000)
 		{
 			Destroy(gameObject, lifetime);
 		}
-	}
-
-	private void FixedUpdate()
-	{
-		rb = GetComponent<Rigidbody>();
 	}
 
 	public void SetRandomVelocity()
@@ -40,13 +35,13 @@ public class SpawnedCube : MonoBehaviour
 		rb = GetComponent<Rigidbody>();
 
 		rb.velocity = new Vector3(
-            Random.Range(xVelocityRange.x, xVelocityRange.y),
-            verticalVelocity, 
-            Random.Range(zVelocityRange.x, zVelocityRange.y));
+			Random.Range(xVelocityRange.x, xVelocityRange.y),
+			verticalVelocity, 
+			Random.Range(zVelocityRange.x, zVelocityRange.y));
 
         rb.angularVelocity = new Vector3(
-            Random.Range(-10, 10), 
-            Random.Range(-10, 10), 
-            Random.Range(-10, 10));
+			Random.Range(-10, 10), 
+			Random.Range(-10, 10), 
+			Random.Range(-10, 10));
     }
 }
