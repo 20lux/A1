@@ -1,32 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class CubeSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject cubePrefab;
+    [SerializeField] private SpawnedCube cubePrefab;
     [SerializeField] private Transform origin;
 
-    private ObjectPool<GameObject> objectPool;
-    public ObjectPool<GameObject> ObjectPool => objectPool;
-    private float spawnRate = 0.01f;
+    private ObjectPool<SpawnedCube> objectPool;
+    public ObjectPool<SpawnedCube> ObjectPool => objectPool;
+    private int spawnRate = 16;
     private int maxSpawns = 10000;
     [HideInInspector] public int spawnedCubes;
 
-	private void Start()
+	private async void Start()
 	{
-        // StartCoroutine(SpawnCubes());
         CreatePools();
+        Task spawnedCubeTask = SpawnCubes();
+        await spawnedCubeTask;
+
+        if (spawnedCubeTask.IsFaulted || spawnedCubeTask.IsCanceled)
+        {
+            Debug.Log("Spawned Cube task is no longer running");
+        }
 	}
 
     private void CreatePools()
     {
-        objectPool = new ObjectPool<GameObject>(() =>
-        {
-            GameObject cube = Instantiate(cubePrefab, origin);
-            return cube;
-        },
+        objectPool = new ObjectPool<SpawnedCube>(
+        CreateCube,
         ActivateCube,
         DeactivateCube,
         DestroyCube,
@@ -34,47 +36,45 @@ public class CubeSpawner : MonoBehaviour
         0, maxSpawns);
     }
 
-	private void Update()
-	{
-        // if (Time.deltaTime > 1)
-        // {
-        //     enabled = false;
-        //     Debug.LogWarning("Spawner script has been disabled to prevent too much overhead and crashing.");
-        // }
-
-         
-	}
-
-    private void ActivateCube(GameObject cube)
+    private SpawnedCube CreateCube()
     {
-        cube.SetActive(true);
+        SpawnedCube cube = Instantiate(cubePrefab, origin);
+        return cube;
     }
 
-    private void DeactivateCube(GameObject cube)
+    private void ActivateCube(SpawnedCube cube)
     {
-        cube.SetActive(false);
+        cube.gameObject.SetActive(true);
     }
 
-    private void DestroyCube(GameObject cube)
+    private void DeactivateCube(SpawnedCube cube)
+    {
+        cube.gameObject.SetActive(false);
+    }
+
+    private void DestroyCube(SpawnedCube cube)
     {
         Destroy(cube);
     }
 
-	// private IEnumerator SpawnCubes()
-    // {
-    //     spawnedCubes = 0;
+    private async Task SpawnCubes()
+    {
+        while (spawnedCubes < maxSpawns)
+        {
+            SpawnCube();
+            await Task.Delay(spawnRate);
+        }
+    }
 
-    //     while (spawnedCubes < maxSpawns)
-    //     {
-	// 		int spawnAmount = 10;
+    private void SpawnCube()
+    {
+        objectPool.Get(out SpawnedCube newSpawnedCube);
 
-	// 		for (int i = 0; i < spawnAmount; i++)
-    //         {      
-    //             GameObject cube = Instantiate(cubePrefab, origin);
-    //             cube.GetComponent<SpawnedCube>().SetRandomVelocity();
-    //         }
+        if (!newSpawnedCube)
+        {
+            return;
+        }
 
-	// 		yield return new WaitForSeconds(spawnRate);
-	// 	}
-    // }
+        newSpawnedCube.SetRandomVelocity();
+    }
 }
