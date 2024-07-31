@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class SpawnedCube : MonoBehaviour
 {
-    private Rigidbody rb;
+	private Rigidbody rb;
 
-    [SerializeField] private Vector2 xVelocityRange = new Vector2(-1, 1);
-    [SerializeField] private float verticalVelocity = 10;
-    [SerializeField] private Vector2 zVelocityRange = new Vector2(-1, 1);
+	[SerializeField] private Vector2 xVelocityRange = new Vector2(-1, 1);
+	[SerializeField] private float verticalVelocity = 10;
+	[SerializeField] private Vector2 zVelocityRange = new Vector2(-1, 1);
 
-    [SerializeField] private float lifetime = 10;
+	[SerializeField] private float lifetime = 10;
 
-    private static CubeSpawner cubeSpawner;
+	private static CubeSpawner cubeSpawner;
 
 	private void Start()
 	{
@@ -31,7 +31,7 @@ public class SpawnedCube : MonoBehaviour
 	}
 
 	public void SetRandomVelocity()
-    {
+	{
 		rb = GetComponent<Rigidbody>();
 
 		rb.velocity = new Vector3(
@@ -43,5 +43,5 @@ public class SpawnedCube : MonoBehaviour
 			Random.Range(-10, 10), 
 			Random.Range(-10, 10), 
 			Random.Range(-10, 10));
-    }
+	}
 }
