@@ -31,7 +31,7 @@ public class SpawnedCube : MonoBehaviour
 	}
 
 	public void SetRandomVelocity()
-    {
+	{
 		rb = GetComponent<Rigidbody>();
 
 		rb.velocity = new Vector3(
@@ -39,9 +39,9 @@ public class SpawnedCube : MonoBehaviour
 			verticalVelocity, 
 			Random.Range(zVelocityRange.x, zVelocityRange.y));
 
-        rb.angularVelocity = new Vector3(
+		rb.angularVelocity = new Vector3(
 			Random.Range(-10, 10), 
 			Random.Range(-10, 10), 
 			Random.Range(-10, 10));
-    }
+	}
 }
