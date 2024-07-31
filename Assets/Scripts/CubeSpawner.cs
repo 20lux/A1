@@ -4,6 +4,8 @@ using UnityEngine.Pool;
 
 public class CubeSpawner : MonoBehaviour
 {
+    //Singleton
+    public static CubeSpawner Instance { get; private set;}
     [SerializeField] private SpawnedCube cubePrefab;
     [SerializeField] private Transform origin;
 
@@ -11,7 +13,11 @@ public class CubeSpawner : MonoBehaviour
     public ObjectPool<SpawnedCube> ObjectPool => objectPool;
     private int spawnRate = 16;
     private int maxSpawns = 10000;
-    [HideInInspector] public int spawnedCubes;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
 	private async void Start()
 	{
@@ -59,7 +65,7 @@ public class CubeSpawner : MonoBehaviour
 
     private async Task SpawnCubes()
     {
-        while (spawnedCubes < maxSpawns)
+        while (objectPool.CountActive < maxSpawns)
         {
             SpawnCube();
             await Task.Delay(spawnRate);
@@ -75,6 +81,6 @@ public class CubeSpawner : MonoBehaviour
             return;
         }
 
-        newSpawnedCube.SetRandomVelocity();
+        newSpawnedCube.Initialise();
     }
 }

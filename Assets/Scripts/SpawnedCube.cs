@@ -1,33 +1,35 @@
-//using System.Numerics;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class SpawnedCube : MonoBehaviour
 {
-	private Rigidbody rb;
+	[SerializeField] private Rigidbody rb;
 
 	[SerializeField] private Vector2 xVelocityRange = new Vector2(-1, 1);
 	[SerializeField] private float verticalVelocity = 10;
 	[SerializeField] private Vector2 zVelocityRange = new Vector2(-1, 1);
 
-	[SerializeField] private float lifetime = 10;
+	[SerializeField] private int lifetime = 10000;
 
-	private static CubeSpawner cubeSpawner;
-
-	private void Start()
+	private void OnEnable()
 	{
-		cubeSpawner = GameObject.Find("Cube Spawner").GetComponent<CubeSpawner>();
-
-		cubeSpawner.spawnedCubes++;
-
-		rb = GetComponent<Rigidbody>();
+		SetLifetime();
 	}
 
-	private void Update()
+	//Releases a cube from the pool after a set lifetime
+	private async void SetLifetime()
 	{
-		if (GameObject.Find("Cube Spawner").GetComponent<CubeSpawner>().spawnedCubes > 10000)
+		await Task.Delay(lifetime);
+
+		if (gameObject.activeSelf)
 		{
-			Destroy(gameObject, lifetime);
+			CubeSpawner.Instance.ObjectPool.Release(this);
 		}
+	}
+
+	public void Initialise()
+	{
+		SetRandomVelocity();
 	}
 
 	public void SetRandomVelocity()
