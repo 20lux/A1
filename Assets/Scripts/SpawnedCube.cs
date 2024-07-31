@@ -39,7 +39,7 @@ public class SpawnedCube : MonoBehaviour
 			verticalVelocity, 
 			Random.Range(zVelocityRange.x, zVelocityRange.y));
 
-zrb.angularVelocity = new Vector3(
+		rb.angularVelocity = new Vector3(
 			Random.Range(-10, 10), 
 			Random.Range(-10, 10), 
 			Random.Range(-10, 10));
