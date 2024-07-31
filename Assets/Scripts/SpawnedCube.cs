@@ -1,4 +1,6 @@
+using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Collections;
 using UnityEngine;
 
 public class SpawnedCube : MonoBehaviour
@@ -11,17 +13,33 @@ public class SpawnedCube : MonoBehaviour
 
 	[SerializeField] private int lifetime = 10000;
 
+	private Coroutine lifetimeCoroutine;
+	private WaitForSeconds lifetimeWait;
+
+	private void Awake()
+	{
+		lifetimeWait = new WaitForSeconds(lifetime);
+	}
+
 	private void OnEnable()
 	{
-		SetLifetime();
+		lifetimeCoroutine = StartCoroutine(SetLifetime());
+	}
+
+	private void OnDisable()
+	{
+		if (lifetimeCoroutine != null)
+		{
+			StopCoroutine(lifetimeCoroutine);
+		}
 	}
 
 	//Releases a cube from the pool after a set lifetime
-	private async void SetLifetime()
+	private IEnumerator SetLifetime()
 	{
-		await Task.Delay(lifetime);
+		yield return lifetimeWait;
 
-		if (gameObject.activeSelf)
+		if (gameObject != null && gameObject.activeSelf)
 		{
 			CubeSpawner.Instance.ObjectPool.Release(this);
 		}
