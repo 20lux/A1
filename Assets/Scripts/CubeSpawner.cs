@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -88,10 +89,16 @@ public class CubeSpawner : MonoBehaviour
         newSpawnedCube.Initialise();
     }
 
+
+/*
+    -Read on asynchronous tasks and how to optimize at OnApplicationQuit
+    -Read on how to clear asynchronous tasks or revert the game back to the original state before it started
+*/
+
 /*
     void OnApplicationQuit()
     {
-        objectPool.Clear();
+
     }
 */
 }
