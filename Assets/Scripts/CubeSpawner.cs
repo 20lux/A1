@@ -12,7 +12,7 @@ public class CubeSpawner : MonoBehaviour
     private ObjectPool<SpawnedCube> objectPool;
     public ObjectPool<SpawnedCube> ObjectPool => objectPool;
     private int spawnRate = 16;
-    private int maxSpawns = 10000;
+    private int maxSpawns = 1000;
 
     private void Awake()
     {
@@ -21,7 +21,11 @@ public class CubeSpawner : MonoBehaviour
 
 	private async void Start()
 	{
-        CreatePools();
+        if (objectPool == null)
+        {
+            CreatePools();
+        }
+
         Task spawnedCubeTask = SpawnCubes();
         await spawnedCubeTask;
 
@@ -83,4 +87,11 @@ public class CubeSpawner : MonoBehaviour
 
         newSpawnedCube.Initialise();
     }
+
+/*
+    void OnApplicationQuit()
+    {
+        objectPool.Clear();
+    }
+*/
 }
