@@ -14,6 +14,7 @@ public class CubeSpawner : MonoBehaviour
     public ObjectPool<SpawnedCube> ObjectPool => objectPool;
     private int spawnRate = 16;
     private int maxSpawns = 1000;
+    private bool enableSpawn = true;
 
     private void Awake()
     {
@@ -70,7 +71,7 @@ public class CubeSpawner : MonoBehaviour
 
     private async Task SpawnCubes()
     {
-        while (objectPool.CountActive < maxSpawns)
+        while (objectPool.CountActive < maxSpawns && enableSpawn)
         {
             SpawnCube();
             await Task.Delay(spawnRate);
@@ -89,16 +90,9 @@ public class CubeSpawner : MonoBehaviour
         newSpawnedCube.Initialise();
     }
 
-
-/*
-    -Read on asynchronous tasks and how to optimize at OnApplicationQuit
-    -Read on how to clear asynchronous tasks or revert the game back to the original state before it started
-*/
-
-/*
     void OnApplicationQuit()
     {
-
+        enableSpawn = false;
     }
-*/
+
 }
