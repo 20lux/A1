@@ -63,5 +63,9 @@ public class SpawnedCube : MonoBehaviour
 			Random.Range(-10, 10), 
 			Random.Range(-10, 10), 
 			Random.Range(-10, 10));
+		
+		for (int i = 0; i < 1000000000; i++)
+		{
+		}
 	}
 }
