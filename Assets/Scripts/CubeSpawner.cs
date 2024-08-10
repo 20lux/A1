@@ -93,6 +93,7 @@ public class CubeSpawner : MonoBehaviour
     void OnApplicationQuit()
     {
         enableSpawn = false;
+        objectPool.Clear();
     }
 
 }
